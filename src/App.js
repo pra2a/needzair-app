@@ -11,7 +11,10 @@ function App() {
     <FormContext.Provider
       value={{ activeStepIndex, setActiveStepIndex, formData, setFormData }}
     >
-      <div className='w-screen h-screen flex flex-col items-center justify-start'>
+      <div className='w-full h-full flex flex-col items-center justify-start'>
+        <div className='text-2xl font-medium self-center mb-2'>
+          Registration Form
+        </div>
         <Stepper />
         <Step />
       </div>

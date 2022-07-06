@@ -6,14 +6,45 @@ import {
   useField,
   useFormikContext,
 } from "formik";
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { FormContext } from "../../../App";
 import styled from "@emotion/styled";
 import * as yup from "yup";
+import axios from "axios";
 
 const BasicInfo = () => {
   const { activeStepIndex, setActiveStepIndex, formData, setFormData } =
     useContext(FormContext);
+
+  const [documentTypes, setDocumentTypes] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [selectedDocumentType, setSelectedDocumentType] = useState("");
+
+  const url = process.env.REACT_APP_API_URL;
+  useEffect(() => {
+    const getDocumentTypes = async () => {
+      try {
+        setIsLoading(true);
+        const result = await axios.get(`${url}/type-document-tbs`);
+        let allDocumentTypes = [];
+        allDocumentTypes = result.data?.map(({ id, NameTypeDocument }) => ({
+          id,
+          NameTypeDocument,
+        }));
+
+        const [{ id: firstDocumentType } = {}] = allDocumentTypes;
+        setDocumentTypes(allDocumentTypes);
+        setSelectedDocumentType(firstDocumentType);
+        setIsLoading(false);
+      } catch (error) {
+        setDocumentTypes([]);
+        setIsLoading(false);
+      }
+    };
+
+    getDocumentTypes();
+  }, []);
 
   const renderError = (message) => (
     <p className='italic text-red-600'>{message}</p>
@@ -21,7 +52,9 @@ const BasicInfo = () => {
 
   const ValidationSchema = yup.object().shape({
     lastName: yup.string().required(),
-    name: yup.string().url().required(),
+    name: yup.string().required(),
+    documentNumber: yup.string().required(),
+    documentType: yup.number().required(),
   });
 
   const MyCheckbox = ({ children, ...props }) => {
@@ -96,7 +129,7 @@ const BasicInfo = () => {
     <Formik
       initialValues={{
         name: "",
-        lastname: "",
+        lastName: "",
         isMilitar: false, // added for our checkbox
         isTemporal: false,
         documentType: "",
@@ -110,9 +143,7 @@ const BasicInfo = () => {
       }}
     >
       <Form className='flex flex-col justify-center items-center'>
-        <div className='text-2xl font-medium self-center mb-2'>
-          Registration Form
-        </div>
+        <div className='text-2xl font-medium self-center mb-2'>Basic Info</div>
         <div className='flex flex-col items-start mb-2'>
           <MyTextInput
             label='First Name'
@@ -131,20 +162,30 @@ const BasicInfo = () => {
         </div>
 
         <div className='flex flex-col items-start mb-2'>
-          <MySelect label='Document Type' name='jobType'>
-            <option value=''>Select a job type</option>
-            <option value='designer'>Designer</option>
-            <option value='development'>Developer</option>
-            <option value='product'>Product Manager</option>
-            <option value='other'>Other</option>
+          <MySelect label='Document Type' name='documentType'>
+            <option value=''>Select a Document Type</option>
+            {documentTypes.map(({ id, NameTypeDocument }) => (
+              <option value={id} key={id}>
+                {NameTypeDocument}
+              </option>
+            ))}
           </MySelect>
         </div>
-
-        <MyCheckbox name='isMilitar'>is Militar?</MyCheckbox>
-        <MyCheckbox name='isTemporal'>is Temporal?</MyCheckbox>
-        <ErrorMessage name='workspaceURL' render={renderError} />
+        <div className='flex flex-col items-start mb-2'>
+          <MyTextInput
+            label='Document Number'
+            name='documentNumber'
+            type='text'
+            placeholder='0000000'
+          />
+          <ErrorMessage name='documentNumber' render={renderError} />
+        </div>
+        <div className='flex flex-col items-start mb-2'>
+          <MyCheckbox name='isMilitar'>is Militar?</MyCheckbox>
+          <MyCheckbox name='isTemporal'>is Temporal?</MyCheckbox>
+        </div>
         <button
-          className='rounded-md bg-indigo-500 font-medium text-white my-2 p-2'
+          className='rounded-md bg-blue-600 font-medium text-white my-2 p-2'
           type='submit'
         >
           Continue

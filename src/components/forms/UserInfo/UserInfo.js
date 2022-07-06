@@ -1,7 +1,16 @@
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import React, { useContext } from "react";
+import {
+  ErrorMessage,
+  Field,
+  Form,
+  Formik,
+  useField,
+  useFormikContext,
+} from "formik";
+import React, { useContext, useState, useEffect } from "react";
 import { FormContext } from "../../../App";
+import styled from "@emotion/styled";
 import * as yup from "yup";
+import { BASE_API_URL } from "../../../utils/constants";
 
 const UserInfo = () => {
   const { activeStepIndex, setActiveStepIndex, formData, setFormData } =
@@ -12,9 +21,42 @@ const UserInfo = () => {
   );
 
   const ValidationSchema = yup.object().shape({
-    name: yup.string().required(),
+    username: yup.string().required(),
     email: yup.string().email().required(),
   });
+
+  const MyTextInput = ({ label, ...props }) => {
+    // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
+    // which we can spread on <input> and alse replace ErrorMessage entirely.
+    const [field, meta] = useField(props);
+    return (
+      <>
+        <label htmlFor={props.id || props.name}>{label}</label>
+        <input className='text-input' {...field} {...props} />
+        {meta.touched && meta.error ? (
+          <div className='error'>{meta.error}</div>
+        ) : null}
+      </>
+    );
+  };
+
+  const StyledErrorMessage = styled.div`
+    font-size: 12px;
+    color: var(--red-600);
+    width: 400px;
+    margin-top: 0.25rem;
+    &:before {
+      content: "❌ ";
+      font-size: 10px;
+    }
+    @media (prefers-color-scheme: dark) {
+      color: var(--red-300);
+    }
+  `;
+
+  const StyledLabel = styled.label`
+    margin-top: 1rem;
+  `;
 
   return (
     <Formik
@@ -26,31 +68,42 @@ const UserInfo = () => {
       validationSchema={ValidationSchema}
       onSubmit={(values) => {
         const data = { ...formData, ...values };
+        console.log(data);
         setFormData(data);
         setActiveStepIndex(activeStepIndex + 1);
       }}
     >
       <Form className='flex flex-col justify-center items-center'>
+        <div className='text-2xl font-medium self-center mb-2'>User Info</div>
         <div className='flex flex-col items-start mb-2'>
-          <label className='font-medium text-gray-900'>UserName</label>
-          <Field
-            name='name'
-            className='rounded-md border-2 p-2'
-            placeholder='John Doe'
+          <MyTextInput
+            label='Username'
+            name='username'
+            type='text'
+            placeholder='Enter your Username'
           />
+          <ErrorMessage name='username' render={renderError} />
         </div>
-        <ErrorMessage name='name' render={renderError} />
         <div className='flex flex-col items-start mb-2'>
-          <label className='font-medium text-gray-900'>Email</label>
-          <Field
+          <MyTextInput
+            label='Email Address'
             name='email'
-            className='rounded-md border-2 p-2'
-            placeholder='john.doe@gmail.com'
+            type='text'
+            placeholder='Enter your email address'
           />
+          <ErrorMessage name='email' render={renderError} />
         </div>
-        <ErrorMessage name='email' render={renderError} />
+        <div className='flex flex-col items-start mb-2'>
+          <MyTextInput
+            label='Password'
+            name='password'
+            type='password'
+            placeholder='Enter your password'
+          />
+          <ErrorMessage name='password' render={renderError} />
+        </div>
         <button
-          className='rounded-md bg-indigo-500 font-medium text-white my-2 p-2'
+          className='rounded-md bg-blue-600 font-medium text-white my-2 p-2'
           type='submit'
         >
           Continue
