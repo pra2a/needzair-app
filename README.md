@@ -8,4 +8,6 @@ Se necesita crear un único endpoint (Remote methods) que permita registrar la i
 
 ![1657078611873](image/README/1657078611873.png)
 
-Crear el repositorio del proyecto y enviar el enlace git para su revisión.
+El frontend se encuentra en el directorio principal, mientras que el backend esta en el directorio /server.
+
+![image](https://user-images.githubusercontent.com/34885777/177679868-34b5bc35-d746-4afa-9b71-2b99d31db681.png)
