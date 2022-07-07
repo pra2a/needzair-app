@@ -158,7 +158,8 @@ label {
 input[type="email"],
 input[type="text"],
 input[type="password"],
-input[type="number"] {
+input[type="number"],
+input[type="date"] {
   padding: 0.65rem 0.5rem;
   font-size: 1rem;
   border: 2px solid var(--gray-200);
@@ -174,7 +175,8 @@ input[type="number"] {
   input[type="email"],
   input[type="text"],
   input[type="password"],
-  input[type="number"] {
+  input[type="number"],
+  input[type="date"] {
     background-color: var(--gray-800);
     border-color: var(--gray-700);
     color: white;
@@ -184,6 +186,7 @@ input[type="number"] {
   input[type="text"]::placeholder,
   input[type="number"]::placeholder,
   input[type="password"]::placeholder,
+  input[type="date"]::placeholder,
   select,
   textarea {
     color: var(--gray-500);
@@ -194,6 +197,7 @@ input[type="email"],
 input[type="text"],
 input[type="number"],
 input[type="password"],
+input[type="date"],
 textarea,
 select {
   width: 400px;

@@ -10,11 +10,18 @@ import React, { useContext, useState, useEffect } from "react";
 import { FormContext } from "../../../App";
 import styled from "@emotion/styled";
 import * as yup from "yup";
+import axios from "axios";
 import { BASE_API_URL } from "../../../utils/constants";
 
 const UserInfo = () => {
-  const { activeStepIndex, setActiveStepIndex, formData, setFormData } =
-    useContext(FormContext);
+  const {
+    activeStepIndex,
+    setActiveStepIndex,
+    formData,
+    setFormData,
+    apiResponse,
+    setApiResponse,
+  } = useContext(FormContext);
 
   const renderError = (message) => (
     <p className='italic text-red-600'>{message}</p>
@@ -64,12 +71,25 @@ const UserInfo = () => {
         username: "",
         email: "",
         password: "",
+        apiresponse: "",
       }}
       validationSchema={ValidationSchema}
-      onSubmit={(values) => {
+      onSubmit={async (values) => {
         const data = { ...formData, ...values };
-        console.log(data);
         setFormData(data);
+        try {
+          const response = await axios.post(`${BASE_API_URL}/usersAll`, data);
+          data.apiresponse = response.data.message;
+          setFormData(data);
+        } catch (error) {
+          console.log(error);
+          data.apiresponse =
+            "Ocurrio un error creando el usuario, intente nuevamente!";
+          setFormData(data);
+          if (error.response) {
+            console.log("error", error.response.data);
+          }
+        }
         setActiveStepIndex(activeStepIndex + 1);
       }}
     >

@@ -13,8 +13,14 @@ import * as yup from "yup";
 import axios from "axios";
 
 const ContactInfo = () => {
-  const { activeStepIndex, setActiveStepIndex, formData, setFormData } =
-    useContext(FormContext);
+  const {
+    activeStepIndex,
+    setActiveStepIndex,
+    formData,
+    setFormData,
+    apiResponse,
+    setApiResponse,
+  } = useContext(FormContext);
 
   const [countries, setCountries] = useState([]);
   const [isLoading, setIsLoading] = useState(false);

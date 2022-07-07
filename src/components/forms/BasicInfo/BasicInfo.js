@@ -13,8 +13,14 @@ import * as yup from "yup";
 import axios from "axios";
 
 const BasicInfo = () => {
-  const { activeStepIndex, setActiveStepIndex, formData, setFormData } =
-    useContext(FormContext);
+  const {
+    activeStepIndex,
+    setActiveStepIndex,
+    formData,
+    setFormData,
+    apiResponse,
+    setApiResponse,
+  } = useContext(FormContext);
 
   const [documentTypes, setDocumentTypes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -134,6 +140,8 @@ const BasicInfo = () => {
         isTemporal: false,
         documentType: "",
         documentNumber: "",
+        placeExpedition: "",
+        dateExpedition: "",
       }}
       validationSchema={ValidationSchema}
       onSubmit={(values) => {
@@ -179,6 +187,24 @@ const BasicInfo = () => {
             placeholder='0000000'
           />
           <ErrorMessage name='documentNumber' render={renderError} />
+        </div>
+        <div className='flex flex-col items-start mb-2'>
+          <MyTextInput
+            label='Expedition Place'
+            name='placeExpedition'
+            type='text'
+            placeholder='Expedition Place'
+          />
+          <ErrorMessage name='placeExpedition' render={renderError} />
+        </div>
+        <div className='flex flex-col items-start mb-2'>
+          <MyTextInput
+            label='Expedition Date'
+            name='dateExpedition'
+            type='date'
+            placeholder='0000-00-00'
+          />
+          <ErrorMessage name='dateExpedition' render={renderError} />
         </div>
         <div className='flex flex-col items-start mb-2'>
           <MyCheckbox name='isMilitar'>is Militar?</MyCheckbox>

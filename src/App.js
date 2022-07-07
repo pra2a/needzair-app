@@ -4,12 +4,20 @@ import Stepper from "./components/stepper/Stepper";
 export const FormContext = createContext();
 
 function App() {
-  const [activeStepIndex, setActiveStepIndex] = useState(0);
+  const [activeStepIndex, setActiveStepIndex, apiResponse, setApiResponse] =
+    useState(0);
   const [formData, setFormData] = useState({});
 
   return (
     <FormContext.Provider
-      value={{ activeStepIndex, setActiveStepIndex, formData, setFormData }}
+      value={{
+        activeStepIndex,
+        setActiveStepIndex,
+        formData,
+        setFormData,
+        apiResponse,
+        setApiResponse,
+      }}
     >
       <div className='w-full h-full flex flex-col items-center justify-start'>
         <div className='text-2xl font-medium self-center mb-2'>
